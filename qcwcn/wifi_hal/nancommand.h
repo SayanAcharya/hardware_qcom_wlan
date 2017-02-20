@@ -47,7 +47,9 @@ private:
     //based on the indication type
     int handleNanIndication();
     //Various Functions to get the appropriate indications
+#ifdef QCOM_WLAN_EXT
     int getNanPublishReplied(NanPublishRepliedInd *event);
+#endif
     int getNanPublishTerminated(NanPublishTerminatedInd *event);
     int getNanMatch(NanMatchInd *event);
     int getNanMatchExpired(NanMatchExpiredInd *event);
@@ -93,6 +95,7 @@ private:
                                 char* rspBuf,
                                 NanStatsResponse *pRsp);
 
+#ifdef QCOM_WLAN_EXT
     //Function which unparses the data and calls the NotifyResponse
     int handleNdpResponse(NanResponseType ndpCmdtyp, struct nlattr **tb_vendor);
     int handleNdpIndication(u32 ndpCmdType, struct nlattr **tb_vendor);
@@ -100,6 +103,7 @@ private:
     int getNdpConfirm(struct nlattr **tb_vendor, NanDataPathConfirmInd *event);
     int getNdpEnd(struct nlattr **tb_vendor, NanDataPathEndInd *event);
     int getNanTransmitFollowupInd(NanTransmitFollowupInd *event);
+#endif
 public:
     NanCommand(wifi_handle handle, int id, u32 vendor_id, u32 subcmd);
     static NanCommand* instance(wifi_handle handle);

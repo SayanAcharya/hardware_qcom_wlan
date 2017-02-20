@@ -35,6 +35,7 @@ int NanCommand::handleNanIndication()
 
     ALOGV("handleNanIndication msg_id:%u", msg_id);
     switch (msg_id) {
+#ifdef QCOM_WLAN_EXT
     case NAN_INDICATION_PUBLISH_REPLIED:
         NanPublishRepliedInd publishRepliedInd;
         memset(&publishRepliedInd, 0, sizeof(publishRepliedInd));
@@ -43,6 +44,7 @@ int NanCommand::handleNanIndication()
             (*mHandler.EventPublishReplied)(&publishRepliedInd);
         }
         break;
+#endif
 
     case NAN_INDICATION_PUBLISH_TERMINATED:
         NanPublishTerminatedInd publishTerminatedInd;
@@ -125,6 +127,7 @@ int NanCommand::handleNanIndication()
         }
         break;
 
+#ifdef QCOM_WLAN_EXT
     case NAN_INDICATION_SELF_TRANSMIT_FOLLOWUP:
         NanTransmitFollowupInd transmitFollowupInd;
         memset(&transmitFollowupInd, 0, sizeof(NanTransmitFollowupInd));
@@ -133,6 +136,7 @@ int NanCommand::handleNanIndication()
             (*mHandler.EventTransmitFollowup)(&transmitFollowupInd);
         }
         break;
+#endif
 
     default:
         ALOGE("handleNanIndication error invalid msg_id:%u", msg_id);
@@ -155,8 +159,10 @@ NanIndicationType NanCommand::getIndicationType()
     NanMsgHeader *pHeader = (NanMsgHeader *)mNanVendorEvent;
 
     switch (pHeader->msgId) {
+#ifdef QCOM_WLAN_EXT
     case NAN_MSG_ID_PUBLISH_REPLIED_IND:
         return NAN_INDICATION_PUBLISH_REPLIED;
+#endif
     case NAN_MSG_ID_PUBLISH_TERMINATED_IND:
         return NAN_INDICATION_PUBLISH_TERMINATED;
     case NAN_MSG_ID_MATCH_IND:
@@ -175,13 +181,16 @@ NanIndicationType NanCommand::getIndicationType()
         return NAN_INDICATION_TCA;
     case NAN_MSG_ID_BEACON_SDF_IND:
         return NAN_INDICATION_BEACON_SDF_PAYLOAD;
+#ifdef QCOM_WLAN_EXT
     case NAN_MSG_ID_SELF_TRANSMIT_FOLLOWUP_IND:
         return NAN_INDICATION_SELF_TRANSMIT_FOLLOWUP;
+#endif
     default:
         return NAN_INDICATION_UNKNOWN;
     }
 }
 
+#ifdef QCOM_WLAN_EXT
 int NanCommand::getNanPublishReplied(NanPublishRepliedInd *event)
 {
     if (event == NULL || mNanVendorEvent == NULL) {
@@ -230,6 +239,7 @@ int NanCommand::getNanPublishReplied(NanPublishRepliedInd *event)
     }
     return WIFI_SUCCESS;
 }
+#endif
 
 int NanCommand::getNanPublishTerminated(NanPublishTerminatedInd *event)
 {
@@ -862,6 +872,7 @@ cleanup:
     return (int)ret;
 }
 
+#ifdef QCOM_WLAN_EXT
 int NanCommand::getNanTransmitFollowupInd(NanTransmitFollowupInd *event)
 {
     if (event == NULL || mNanVendorEvent == NULL) {
@@ -1019,3 +1030,4 @@ int NanCommand::getNdpConfirm(struct nlattr **tb_vendor,
     }
     return WIFI_SUCCESS;
 }
+#endif

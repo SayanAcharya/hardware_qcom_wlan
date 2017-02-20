@@ -23,6 +23,10 @@ ifeq ($(TARGET_BUILD_VARIANT),eng)
 LOCAL_CFLAGS += "-DLOG_NDEBUG=0 -UNDEBUG"
 endif
 
+ifeq ($(strip $(BOARD_QCOM_WLAN_EXT)),true)
+LOCAL_CFLAGS += -DQCOM_WLAN_EXT
+endif
+
 # gscan.cpp: address of array 'cached_results[i].results' will always evaluate to 'true'
 LOCAL_CLANG_CFLAGS := -Wno-pointer-bool-conversion
 
@@ -31,10 +35,12 @@ LOCAL_C_INCLUDES += \
 	external/libnl/include \
 	$(call include-path-for, libhardware_legacy)/hardware_legacy \
 	external/wpa_supplicant_8/src/drivers \
-	$(TARGET_OUT_HEADERS)/libwpa_client \
-	$(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
+	$(TARGET_OUT_HEADERS)/libwpa_client
 
+ifeq ($(TARGET_COMPILE_WITH_MSM_KERNEL),true)
+LOCAL_C_INCLUDES += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
 LOCAL_ADDITIONAL_DEPENDENCIES += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr
+endif
 
 LOCAL_SRC_FILES := \
 	wifi_hal.cpp \
@@ -81,6 +87,10 @@ ifeq ($(TARGET_BUILD_VARIANT),userdebug)
 LOCAL_CFLAGS += "-DLOG_NDEBUG=0 -UNDEBUG"
 endif
 
+ifeq ($(strip $(BOARD_QCOM_WLAN_EXT)),true)
+LOCAL_CFLAGS += -DQCOM_WLAN_EXT
+endif
+
 # gscan.cpp: address of array 'cached_results[i].results' will always evaluate to 'true'
 LOCAL_CLANG_CFLAGS := -Wno-pointer-bool-conversion
 
@@ -89,10 +99,12 @@ LOCAL_C_INCLUDES += \
 	external/libnl/include \
 	$(call include-path-for, libhardware_legacy)/hardware_legacy \
 	external/wpa_supplicant_8/src/drivers \
-	$(TARGET_OUT_HEADERS)/libwpa_client \
-	$(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
+	$(TARGET_OUT_HEADERS)/libwpa_client
 
+ifeq ($(TARGET_COMPILE_WITH_MSM_KERNEL),true)
+LOCAL_C_INCLUDES += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
 LOCAL_ADDITIONAL_DEPENDENCIES += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr
+endif
 
 LOCAL_SRC_FILES := \
 	wifi_hal.cpp \

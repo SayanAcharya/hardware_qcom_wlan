@@ -591,6 +591,7 @@ cleanup:
     return (wifi_error)ret;
 }
 
+#ifdef QCOM_WLAN_EXT
 wifi_error nan_initialize_vendor_cmd(wifi_interface_handle iface,
                                      NanCommand **nanCommand)
 {
@@ -939,6 +940,7 @@ cleanup:
     delete nanCommand;
     return (wifi_error)ret;
 }
+#endif
 
 // Implementation related to nan class common functions
 // Constructor
@@ -1008,6 +1010,7 @@ int NanCommand::setCallbackHandler(NanCallbackHandler nHandler)
         return res;
     }
 
+#ifdef QCOM_WLAN_EXT
     res = registerVendorHandler(mVendor_id, QCA_NL80211_VENDOR_SUBCMD_NDP);
     if (res != 0) {
         //error case should not happen print log
@@ -1015,6 +1018,7 @@ int NanCommand::setCallbackHandler(NanCallbackHandler nHandler)
               " subcmd=QCA_NL80211_VENDOR_SUBCMD_NDP", __FUNCTION__, mVendor_id);
         return res;
     }
+#endif
     return res;
 }
 
@@ -1071,7 +1075,9 @@ int NanCommand::handleEvent(WifiEvent &event)
             //with the corresponding populated Indication event
             handleNanIndication();
         }
-    } else if (mSubcmd == QCA_NL80211_VENDOR_SUBCMD_NDP) {
+    }
+#ifdef QCOM_WLAN_EXT
+    else if (mSubcmd == QCA_NL80211_VENDOR_SUBCMD_NDP) {
         // Parse the vendordata and get the NAN attribute
         u32 ndpCmdType;
         struct nlattr *tb_vendor[QCA_WLAN_VENDOR_ATTR_NDP_AFTER_LAST + 1];
@@ -1110,7 +1116,9 @@ int NanCommand::handleEvent(WifiEvent &event)
                           __FUNCTION__, ndpCmdType);
                 }
         }
-    } else {
+    }
+#endif
+    else {
         //error case should not happen print log
         ALOGE("%s: Wrong NAN subcmd received %d", __FUNCTION__, mSubcmd);
     }

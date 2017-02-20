@@ -244,8 +244,10 @@ int NanCommand::getNanResponse(transaction_id *id, NanResponseMsg *pRsp)
                        pFwRsp->max_ndp_sessions;
             pRsp->body.nan_capabilities.max_app_info_len = \
                        pFwRsp->max_app_info_len;
+#ifdef QCOM_WLAN_EXT
             pRsp->body.nan_capabilities.max_queued_transmit_followup_msgs = \
                        pFwRsp->max_queued_transmit_followup_msgs;
+#endif
             break;
         }
         default:
@@ -515,6 +517,7 @@ void NanCommand::handleNanStatsResponse(NanStatsType stats_type,
     }
 }
 
+#ifdef QCOM_WLAN_EXT
 int NanCommand::handleNdpResponse(NanResponseType ndpCmdType,
                                   struct nlattr **tb_vendor)
 {
@@ -559,3 +562,4 @@ int NanCommand::handleNdpResponse(NanResponseType ndpCmdType,
     }
     return WIFI_SUCCESS;
 }
+#endif
