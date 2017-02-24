@@ -926,14 +926,11 @@ int LLStatsCommand::handleResponse(WifiEvent &reply)
             {
                 case QCA_NL80211_VENDOR_SUBCMD_LL_STATS_TYPE_RADIO:
                 {
-                    if (!tb_vendor[QCA_WLAN_VENDOR_ATTR_LL_STATS_NUM_RADIOS])
-                    {
-                        ALOGD("%s: QCA_WLAN_VENDOR_ATTR_LL_STATS_NUM_RADIOS"
-                              " not found", __FUNCTION__);
-                        return WIFI_ERROR_INVALID_ARGS;
-                    }
-                    mNumRadios = nla_get_u32(tb_vendor[
-                                    QCA_WLAN_VENDOR_ATTR_LL_STATS_NUM_RADIOS]);
+                    if (tb_vendor[QCA_WLAN_VENDOR_ATTR_LL_STATS_NUM_RADIOS])
+                        mNumRadios = nla_get_u32(tb_vendor[
+                                        QCA_WLAN_VENDOR_ATTR_LL_STATS_NUM_RADIOS]);
+                    else
+                        mNumRadios = 1;
 
                     if (!tb_vendor[
                         QCA_WLAN_VENDOR_ATTR_LL_STATS_RADIO_NUM_CHANNELS
